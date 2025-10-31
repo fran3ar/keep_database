@@ -1,0 +1,33 @@
+name: DB_And_Telegram_yml_script  # nombre del workflow que verás en GitHub Actions
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:  # permite correr manualmente
+  schedule:
+    - cron: "0 11,17,23 * * *"  # tres veces al día: 08:00, 14:00 y 20:00 hora Argentina (UTC-3)
+
+jobs:
+  db_and_telegram_job:  # nombre interno del job
+    runs-on: ubuntu-latest
+
+    env:  
+      SECRET_BOT_TOKEN: ${{ secrets.SECRET_BOT_TOKEN }}  # token de Telegram  
+      DB_URL: ${{ secrets.DB_URL }}                      # URL de la base de datos  
+
+    steps:  
+      - name: Checkout repository  
+        uses: actions/checkout@v3  
+
+      - name: Setup Python  
+        uses: actions/setup-python@v4  
+        with:  
+          python-version: 3.12  
+
+      - name: Install dependencies from requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run DB and Telegram script
+        run: python main_script.py

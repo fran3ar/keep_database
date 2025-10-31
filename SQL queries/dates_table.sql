@@ -1,0 +1,5 @@
+CREATE TABLE dates_table (
+    id SERIAL PRIMARY KEY,
+    word TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
