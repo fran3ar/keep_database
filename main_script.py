@@ -14,7 +14,7 @@ payload = {
             "parts": [
                 {
                     "text": (
-                        "Generate random news or interesting information about anything, so I can learn something new every day."
+                        "Generate random news or interesting information about anything so I can learn something new every day. Return only the information, nothing else."
                     )
                 }
             ]
@@ -22,15 +22,17 @@ payload = {
     ],
     "generationConfig": {
         "temperature": 1.2,
-        "maxOutputTokens": 30
+        "maxOutputTokens": 150   # ← increased
     }
 }
 
 response = requests.post(url, json=payload)
 data = response.json()
 
-# Extraer solo el texto
-text334 = data["candidates"][0]["content"]["parts"][0]["text"]
+text2121 = data["candidates"][0]["content"]["parts"][0]["text"]
+
+
+
 
 #############
 
@@ -95,7 +97,7 @@ mensaje = f"🕒 Hora: {hora_actual}\nTotal de filas: {total_filas}"
 
 # Enviar mensaje
 send_telegram_message(BOT_TOKEN, CHAT_ID, mensaje)
-send_telegram_message(BOT_TOKEN, CHAT_ID, text334)
+send_telegram_message(BOT_TOKEN, CHAT_ID, text2121)
 
 # Cerrar conexión al final
 conn.close()
