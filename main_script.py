@@ -3,6 +3,36 @@ import requests
 from datetime import datetime
 import pytz
 import os
+#############
+import requests
+
+url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=AIzaSyCRMtC-p086OkqPA3PNv_jboJdiwNBKAo8"
+
+payload = {
+    "contents": [
+        {
+            "parts": [
+                {
+                    "text": (
+                        "Generate random news or interesting information about anything, so I can learn something new every day."
+                    )
+                }
+            ]
+        }
+    ],
+    "generationConfig": {
+        "temperature": 1.2,
+        "maxOutputTokens": 30
+    }
+}
+
+response = requests.post(url, json=payload)
+data = response.json()
+
+# Extraer solo el texto
+text334 = data["candidates"][0]["content"]["parts"][0]["text"]
+
+#############
 
 # --- Configuración ---
 BOT_TOKEN = os.getenv("SECRET_BOT_TOKEN")  # export SECRET_BOT_TOKEN="..."
@@ -65,6 +95,7 @@ mensaje = f"🕒 Hora: {hora_actual}\nTotal de filas: {total_filas}"
 
 # Enviar mensaje
 send_telegram_message(BOT_TOKEN, CHAT_ID, mensaje)
+send_telegram_message(BOT_TOKEN, CHAT_ID, text334)
 
 # Cerrar conexión al final
 conn.close()
