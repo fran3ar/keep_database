@@ -7,10 +7,10 @@ import os
 #########################################
 # ------- GEMINI NEWS GENERATION -------
 #########################################
-
+GEMINI_API_KEY_value = os.getenv("GEMINI_API_KEY")
 def generate_news():
     try:
-        url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=AIzaSyCRMtC-p086OkqPA3PNv_jboJdiwNBKAo8"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key={GEMINI_API_KEY_value}"
 
         payload = {
             "contents": [
