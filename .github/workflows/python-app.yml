@@ -13,7 +13,8 @@ jobs:
 
     env:  
       SECRET_BOT_TOKEN: ${{ secrets.SECRET_BOT_TOKEN }}  # token de Telegram  
-      DB_URL: ${{ secrets.DB_URL }}                      # URL de la base de datos  
+      DB_URL: ${{ secrets.DB_URL }}    
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}# URL de la base de datos  
 
     steps:  
       - name: Checkout repository  
