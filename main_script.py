@@ -7,42 +7,38 @@ import os
 #########################################
 # ------- GEMINI NEWS GENERATION -------
 #########################################
-GEMINI_API_KEY_value = os.getenv("GEMINI_API_KEY")
-def generate_news():
-    try:
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key={GEMINI_API_KEY_value}"
+GROQ_API_KEY_value = os.getenv("GROQ_API_KEY")
+from groq import Groq
 
-        payload = {
-            "contents": [
-                {
-                    "parts": [
-                        {
-                            "text": (
-                                "Generate random news or interesting information about anything "
-                                "so I can learn something new every day. Return only the information."
-                            )
-                        }
-                    ]
-                }
-            ],
-            "generationConfig": {
-                "temperature": 1.2,
-                "maxOutputTokens": 150
-            }
-        }
+client = Groq(api_key = GROQ_API_KEY_value)
 
-        response = requests.post(url, json=payload)
-        data = response.json()
+# Use .with_raw_response to access headers
+response = client.chat.completions.with_raw_response.create(
+    model="groq/compound-mini", # Assuming this is your valid model ID
+    messages=[{"role": "user", "content": "Hello"}],
+    temperature=1,
+    max_completion_tokens=1024,
+    stream=False # Headers are easier to read in non-streaming mode
+)
 
-        return data["candidates"][0]["content"]["parts"][0]["text"]
+# 1. Get the actual chat completion content
+completion = response.parse()
+print(f"Response: {completion.choices[0].message.content}")
 
-    except Exception as e:
-        return f"⚠️ Error al obtener noticia de Gemini: {e}"
+# 2. Extract Rate Limit Headers (Your "Tier Usage")
+headers = response.headers
+print("\n--- API Key Tier Status ---")
+print(f"Requests Remaining (RPM): {headers.get('x-ratelimit-remaining-requests')}")
+print(f"Tokens Remaining (TPM): {headers.get('x-ratelimit-remaining-tokens')}")
+print(f"Reset Time: {headers.get('x-ratelimit-reset-requests')}")
+status = (
+    "\n--- API Key Tier Status ---\n"
+    f"Requests Remaining (RPM): {headers.get('x-ratelimit-remaining-requests')}\n"
+    f"Tokens Remaining (TPM): {headers.get('x-ratelimit-remaining-tokens')}\n"
+    f"Reset Time: {headers.get('x-ratelimit-reset-requests')}"
+)
 
-#########################################
-# ------------- TELEGRAM ---------------
-#########################################
-
+print(status)
 def send_telegram_message(token, chat_id, text):
     try:
         url = f"https://api.telegram.org/bot{token}/sendMessage"
@@ -92,7 +88,7 @@ insert_status = insert_word("test")
 rows_count = count_rows_dates_table()
 
 # --- Obtener noticia Gemini ---
-news = generate_news()
+news = status
 
 # --- Hora actual ---
 hora_actual = datetime.now(arg_tz).strftime("%Y-%m-%d %H:%M:%S")
