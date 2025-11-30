@@ -3,12 +3,12 @@ import requests
 from datetime import datetime
 import pytz
 import os
-
+from groq import Groq
 #########################################
 # ------- GEMINI NEWS GENERATION -------
 #########################################
 GROQ_API_KEY_value = os.getenv("GROQ_API_KEY")
-from groq import Groq
+print(GROQ_API_KEY_value)
 
 client = Groq(api_key = GROQ_API_KEY_value)
 
